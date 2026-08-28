@@ -1,0 +1,68 @@
+# ==== .NET / ASP.NET Core ====
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+publish/
+*.pubxml
+*.pubxml.user
+*.publishsettings
+
+# Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# EF Core migrations bundle (mantemos as migrations em si, só ignoramos artefatos)
+*.dbmdl
+
+# Uploads locais (imagens de produto etc.) — nunca versionar conteúdo enviado por usuário
+src/Presentation/NexusCrud.Api/wwwroot/uploads/
+
+# ==== Angular / Node ====
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/.angular/
+frontend/**/npm-debug.log*
+frontend/**/yarn-debug.log*
+frontend/**/yarn-error.log*
+frontend/**/.env
+frontend/**/.env.local
+
+# ==== Docker ====
+docker/**/*.env
+
+# ==== Segredos / configs locais (NUNCA versionar) ====
+appsettings.Development.json
+appsettings.*.local.json
+*.pfx
+*.key
+.env
+.env.*
+**/secrets.json
+
+# ==== IDEs ====
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.DotSettings.user
+*.rsuser
+
+# ==== Sistema operacional ====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==== Claude Code / MCP (config local com token, nunca versionar) ====
+.mcp.json
