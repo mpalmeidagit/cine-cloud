@@ -19,6 +19,7 @@ public class UpdateDvdCommandValidator : AbstractValidator<UpdateDvdCommand>
             .MinimumLength(Dvd.MIN_TITLE_LENGTH).WithMessage(ValidationMessages.MIN_LENGTH_ERROR_MESSAGE)
             .MaximumLength(Dvd.MAX_TITLE_LENGTH).WithMessage(ValidationMessages.MAX_LENGTH_ERROR_MESSAGE);
         RuleFor(x => x.Genre)
+            .GreaterThanOrEqualTo(0).WithMessage(GENRE_ERROR_MESSAGE)
             .LessThan(GENRE_ERROR_NUMBER).WithMessage(GENRE_ERROR_MESSAGE);
         RuleFor(x => x.Published)
             .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
