@@ -31,4 +31,36 @@
   <Folder Name="/src/Shared/Queries/Infrastructure/">
     <Project Path="src/Shared/Queries/Infrastructure/CineCloud.Queries.Infrastructure/CineCloud.Queries.Infrastructure.csproj" Id="b61cb09a-66c2-43cb-b002-975f903213dc" />
   </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/BuildingBlocks/">
+    <Project Path="test/BuildingBlocks/BuildingBlocks.Core.Tests/BuildingBlocks.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Services/" />
+  <Folder Name="/test/Services/Consumer/">
+    <Project Path="test/Services/Consumer/CineCloud.Consumer.Tests/CineCloud.Consumer.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Services/Publisher/" />
+  <Folder Name="/test/Services/Publisher/Application/">
+    <Project Path="test/Services/Publisher/Application/CineCloud.Application.Tests/CineCloud.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Services/Publisher/Domain/">
+    <Project Path="test/Services/Publisher/Domain/CineCloud.Domain.Tests/CineCloud.Domain.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Services/Publisher/Infrastructure/">
+    <Project Path="test/Services/Publisher/Infrastructure/CineCloud.Infrastructure.Tests/CineCloud.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Services/Publisher/Presentation/">
+    <Project Path="test/Services/Publisher/Presentation/CineCloud.WebApi.Tests/CineCloud.WebApi.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Shared/" />
+  <Folder Name="/test/Shared/Queries/" />
+  <Folder Name="/test/Shared/Queries/Application/">
+    <Project Path="test/Shared/Queries/Application/CineCloud.Queries.Application.Tests/CineCloud.Queries.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Shared/Queries/Domain/">
+    <Project Path="test/Shared/Queries/Domain/CineCloud.Queries.Domain.Tests/CineCloud.Queries.Domain.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Shared/Queries/Infrastructure/">
+    <Project Path="test/Shared/Queries/Infrastructure/CineCloud.Queries.Infrastructure.Tests/CineCloud.Queries.Infrastructure.Tests.csproj" />
+  </Folder>
 </Solution>
