@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\CineCloud.Domain\CineCloud.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
