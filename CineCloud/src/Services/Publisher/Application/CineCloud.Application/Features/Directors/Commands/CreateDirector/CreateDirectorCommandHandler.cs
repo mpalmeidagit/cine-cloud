@@ -30,6 +30,8 @@ public class CreateDirectorCommandHandler : IRequestHandler<CreateDirectorComman
         );
 
         var result = await _repository.Create(director);
+        if (!result)
+            return default;
 
         return new CreateDirectorResponse(
             director.Id.ToString(),
