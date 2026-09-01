@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Services\Publisher\Application\CineCloud.Application\CineCloud.Application.csproj" />
+    <ProjectReference Include="..\..\Domain\CineCloud.Queries.Domain\CineCloud.Queries.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
