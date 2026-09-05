@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Core.Mediator;
+﻿using BuildingBlocks.Core.EventBus.Events;
+using BuildingBlocks.Core.Mediator;
 using CineCloud.Application.Features.Dvds.Commands.CreateDvd;
 using CineCloud.Application.Features.Dvds.Commands.DeleteDvd;
 using CineCloud.Application.Features.Dvds.Commands.RentDvd;
@@ -61,18 +62,18 @@ public class DvdsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
-        //var @event = new DvdCreatedEvent(
-        //    response.Id,
-        //    response.Title,
-        //    response.Genre,
-        //    response.Published,
-        //    response.Available,
-        //    response.Copies,
-        //    response.DirectorId,
-        //    response.CreatedAt,
-        //    response.UpdatedAt);
+        var @event = new DvdCreatedEvent(
+            response.Id,
+            response.Title,
+            response.Genre,
+            response.Published,
+            response.Available,
+            response.Copies,
+            response.DirectorId,
+            response.CreatedAt,
+            response.UpdatedAt);
 
-        //await _publishEndPoint.Publish(@event);
+        await _publishEndPoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.Created, true, response);
     }
@@ -88,16 +89,17 @@ public class DvdsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
-        //var @event = new DvdUpdatedEvent(
-        //    response.Id,
-        //    response.Title,
-        //    response.Genre,
-        //    response.Published,
-        //    response.Copies,
-        //    response.DirectorId,
-        //    response.UpdatedAt);
+        var @event = new DvdUpdatedEvent(
+            response.Id,
+            response.Title,
+            response.Genre,
+            response.Published,
+            response.Copies,
+            response.DirectorId,
+            response.UpdatedAt);
 
-        //await _publishEndPoint.Publish(@event);
+        await _publishEndPoint.Publish(@event);
+
         return CustomResponse((int)HttpStatusCode.OK, true, response);
     }
 
@@ -112,8 +114,8 @@ public class DvdsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
-        //var @event = new DvdRentedEvent(id.ToString(), response.UpdatedAt);
-        //await _publishEndPoint.Publish(@event);
+        var @event = new DvdRentedEvent(id.ToString(), response.UpdatedAt);
+        await _publishEndPoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.OK, true, response);
     }
@@ -129,8 +131,8 @@ public class DvdsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
-        //var @event = new DvdReturnedEvent(id.ToString(), response.UpdatedAt);
-        //await _publishEndPoint.Publish(@event);
+        var @event = new DvdReturnedEvent(id.ToString(), response.UpdatedAt);
+        await _publishEndPoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.OK, true, response);
     }
@@ -147,8 +149,8 @@ public class DvdsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
-        //var @event = new DvdDeletedEvent(id.ToString(), response.DeletedAt);
-        //await _publishEndPoint.Publish(@event);
+        var @event = new DvdDeletedEvent(id.ToString(), response.DeletedAt);
+        await _publishEndPoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.OK, true);
     }
