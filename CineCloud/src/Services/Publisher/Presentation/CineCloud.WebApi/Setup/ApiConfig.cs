@@ -49,6 +49,7 @@ public static class ApiConfig
             .AddSqlServer(configuration.GetConnectionString("SqlConnection"));
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
 
         return services;
     }

@@ -1,0 +1,40 @@
+services:
+  cachedb:
+    image: redis
+    networks:
+      - cine-cloud-network
+
+  querydb:
+    image: mongo
+    networks:
+      - cine-cloud-network
+
+  writedb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - cine-cloud-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - cine-cloud-network
+
+  cinecloud.webapi:
+    image: ${DOCKER_REGISTRY-}cinecloudwebapi
+    build:
+      context: .
+      dockerfile: src/Services/Publisher/Presentation/CineCloud.WebApi/Dockerfile
+    networks:
+      - cine-cloud-network
+
+  cinecloud.consumer:
+    image: ${DOCKER_REGISTRY-}cinecloudconsumer
+    build:
+      context: .
+      dockerfile: src/Services/Consumer/CineCloud.Consumer/Dockerfile
+    networks:
+      - cine-cloud-network
+
+networks:
+  cine-cloud-network:
+    driver: bridge

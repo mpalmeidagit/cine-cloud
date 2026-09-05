@@ -7,6 +7,7 @@ using CineCloud.Queries.Infrastructure.Settings;
 using CineCloud.Consumer.Consumers.Directors;
 using CineCloud.Consumer.Consumers.Dvds;
 using BuildingBlocks.Core.EventBus;
+using MongoDB.Driver;
 
 
 namespace CineCloud.Consumer.Setup;
@@ -17,6 +18,7 @@ public static class ConsumerConfig
     {
         services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+        services.AddSingleton<IMongoClient>(sp => new MongoClient(sp.GetRequiredService<MongoDbSettings>().ConnectionString));
         services.AddQueryApplication();
         services.AddQueryInfrastructure();
         services.AddMassTransit(config =>
