@@ -1,9 +1,11 @@
 ﻿using BuildingBlocks.Core;
+using BuildingBlocks.Core.EventBus.Events;
 using BuildingBlocks.Core.Mediator;
 using CineCloud.Application.Features.Directors.Commands.CreateDirector;
 using CineCloud.Application.Features.Directors.Commands.DeleteDirector;
 using CineCloud.Application.Features.Directors.Commands.UpdateDirector;
 using CineCloud.Queries.Application.Features.Directors.Queries.GetDirector;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -12,10 +14,12 @@ namespace CineCloud.WebApi.Controllers;
 public class DirectorsController : ApiController
 {
     private readonly IMediatorHandler _mediator;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public DirectorsController(IMediatorHandler mediator)
+    public DirectorsController(IMediatorHandler mediator, IPublishEndpoint publishEndpoint)
     {
         _mediator = mediator;
+        _publishEndpoint = publishEndpoint;
     }
 
 
@@ -44,7 +48,11 @@ public class DirectorsController : ApiController
         var response = (CreateDirectorResponse)await _mediator.SendCommand(command, HttpContext.RequestAborted);
 
         if (response is null)
-            return CustomResponse((int)HttpStatusCode.BadRequest, false); 
+            return CustomResponse((int)HttpStatusCode.BadRequest, false);
+
+        var @event = new DirectorCreatedEvent(response.Id, response.FullName, response.CreatedAt, response.UpdatedAt);
+
+        await _publishEndpoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.Created, true, response);
     }
@@ -60,6 +68,9 @@ public class DirectorsController : ApiController
         if (response is null)
             return CustomResponse((int)HttpStatusCode.BadRequest, false);
 
+        var @event = new DirectorUpdatedEvent(response.Id, response.FullName, response.UpdatedAt);
+        await _publishEndpoint.Publish(@event);
+
         return CustomResponse((int)HttpStatusCode.OK, true, response);
     }
 
@@ -74,6 +85,8 @@ public class DirectorsController : ApiController
         if (!response)
             return CustomResponse((int)HttpStatusCode.BadRequest, response);
 
+        var @event = new DirectorDeletedEvent(id.ToString());
+        await _publishEndpoint.Publish(@event);
 
         return CustomResponse((int)HttpStatusCode.OK, response);
     }

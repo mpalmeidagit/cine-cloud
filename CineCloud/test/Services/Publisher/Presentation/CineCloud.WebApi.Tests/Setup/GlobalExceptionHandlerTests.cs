@@ -64,6 +64,6 @@ public class GlobalExceptionHandlerTests
         var (statusCode, body) = await InvokeAsync(new InvalidOperationException("boom"));
 
         statusCode.Should().Be(500);
-        body.Should().Contain("Something went wrong");
+        body.Should().Contain("Algo deu errado");
     }
 }

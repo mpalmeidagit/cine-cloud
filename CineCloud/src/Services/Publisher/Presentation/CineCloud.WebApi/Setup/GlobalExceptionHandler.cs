@@ -22,7 +22,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             DomainException domainException => (500, domainException.Message),
             SqlException sqlException => (500, sqlException.Message),
             ValidationException validationException => (500, validationException.Message),
-            _ => (500, "Something went wrong")
+            _ => (500, "Algo deu errado")
         };
 
         logger.LogError(exception, exception.Message);

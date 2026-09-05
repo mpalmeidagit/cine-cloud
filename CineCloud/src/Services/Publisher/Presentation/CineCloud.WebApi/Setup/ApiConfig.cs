@@ -1,11 +1,7 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using CineCloud.Application;
-using CineCloud.Infrastructure;
-using CineCloud.Infrastructure.Context;
-using CineCloud.Queries.Application.Features;
-using CineCloud.Queries.Infrastructure;
+﻿using CineCloud.Infrastructure.Context;
 using CineCloud.Queries.Infrastructure.Settings;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -16,11 +12,8 @@ public static class ApiConfig
 {
 
     public static IServiceCollection AddApiConfig(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddWriteApplication();
-        services.AddWriteInfrastructure();
-        services.AddQueryApplication();
-        services.AddQueryInfrastructure();
+    {       
+        services.AddDependencyInjection();
 
         services.AddDbContext<CineCloudWriteContext>(options =>
         {
