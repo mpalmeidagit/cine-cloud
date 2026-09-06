@@ -33,6 +33,21 @@ public class DirectorsQueryRepository : IDirectorsQueryRepository
     public async Task<Director> GetByName(string name) =>
         await _context.Directors.Find(p => p.FullName == name).FirstOrDefaultAsync();
 
+    public async Task<(IReadOnlyCollection<Director> Items, long TotalCount)> GetAll(int page, int pageSize)
+    {
+        var filter = Builders<Director>.Filter.Empty;
+
+        var totalCount = await _context.Directors.CountDocumentsAsync(filter);
+        var items = await _context.Directors
+            .Find(filter)
+            .SortBy(d => d.FullName)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
     public async Task<bool> Update(Director entity)
     {
         var result = await _context.Directors.ReplaceOneAsync(d => d.Id == entity.Id, entity);
