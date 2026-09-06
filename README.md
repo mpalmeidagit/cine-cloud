@@ -22,6 +22,7 @@ MongoDB, com um cache Redis na frente das consultas mais acessadas.
 - [Entity Framework Core — migrations](#entity-framework-core--migrations)
 - [Testes automatizados](#testes-automatizados)
 - [RabbitMQ — painel de gerenciamento](#rabbitmq--painel-de-gerenciamento)
+- [MongoDB — acessando o banco de leitura](#mongodb--acessando-o-banco-de-leitura)
 - [Endpoints principais](#endpoints-principais)
 - [Documentação adicional](#documentação-adicional)
 
@@ -393,6 +394,84 @@ tem várias abas; aqui está o que cada uma mostra **e como o CineCloud usa isso
   `return-dvd-queue`. Clicar numa fila mostra quantas mensagens estão paradas nela (útil para
   perceber se o `CineCloud.Consumer` parou de consumir) e permite inspecionar/republicar
   mensagens manualmente — bom para depurar sem precisar chamar a API de novo.
+
+## MongoDB — acessando o banco de leitura
+
+O container `querydb` **não tem autenticação configurada** (uso local/estudo), então
+qualquer uma das formas abaixo já conecta direto, sem usuário/senha.
+
+### Direto no terminal, entrando no container
+
+Não precisa instalar nada — usa o `mongosh` que já vem dentro da própria imagem do Mongo:
+
+```bash
+docker exec -it querydb mongosh
+```
+
+Uma vez dentro do shell interativo:
+
+```js
+show dbs                 // lista os bancos existentes
+use CineCloudDb          // troca para o banco da aplicação
+show collections         // lista as coleções (Directors, Dvds)
+db.Directors.find()      // lista todos os diretores
+db.Dvds.find()           // lista todos os DVDs
+```
+
+Alguns comandos extras que ajudam a depurar:
+
+```js
+db.Directors.countDocuments()                  // quantos diretores existem
+db.Dvds.find({ Title: "Jaws" })                // busca um DVD por título exato
+db.Dvds.find({ Available: true })              // só os DVDs disponíveis
+db.Directors.find().sort({ CreatedAt: -1 })    // últimos criados primeiro
+exit                                            // sai do shell (ou Ctrl+D)
+```
+
+Para rodar um comando sem entrar no modo interativo (útil em scripts):
+
+```bash
+docker exec querydb mongosh --quiet --eval "db.getSiblingDB('CineCloudDb').Directors.find()"
+```
+
+### Com `mongosh` instalado na sua máquina (sem `docker exec`)
+
+Como a porta `27017` do container está mapeada para o host, também dá para conectar de
+fora do Docker, se tiver o [MongoDB Shell](https://www.mongodb.com/try/download/shell)
+instalado localmente:
+
+```bash
+mongosh "mongodb://localhost:27017/CineCloudDb"
+```
+
+Os comandos dentro do shell são exatamente os mesmos da seção anterior.
+
+### Com MongoDB Compass (interface gráfica)
+
+O [MongoDB Compass](https://www.mongodb.com/try/download/compass) é o app oficial (gratuito)
+para explorar o banco visualmente, sem escrever comandos. Passo a passo:
+
+1. Abra o Compass e clique em **Add new connection**.
+2. No campo **URI**, cole:
+   ```
+   mongodb://localhost:27017/CineCloudDb
+   ```
+   (o `/CineCloudDb` no final é opcional — sem ele, o Compass lista todos os bancos e você
+   escolhe o `CineCloudDb` na lateral esquerda depois de conectar.)
+3. Em **Name** (opcional), dê um nome para identificar a conexão depois — por exemplo
+   `CineCloud - Docker local`.
+4. Não é preciso mexer em **Advanced Connection Options** — isso só é necessário quando há
+   usuário/senha, SSL ou replica set, o que não é o caso aqui.
+5. Clique em **Save & Connect** (salva a conexão para reabrir depois) ou apenas
+   **Connect**.
+
+Depois de conectado, o banco `CineCloudDb` aparece no painel esquerdo com as coleções
+`Directors` e `Dvds` — dá para clicar em cada uma e navegar pelos documentos visualmente,
+ou usar a barra de filtro do Compass (aceita a mesma sintaxe de `find()` do Mongo).
+
+> ⚠️ Pré-requisito para qualquer uma das três formas: os containers do Compose precisam
+> estar rodando (`docker compose ps` para conferir) — sem o `querydb` de pé, a porta `27017`
+> não está escutando em lugar nenhum.
 
 ## Endpoints principais
 
