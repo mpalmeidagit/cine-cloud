@@ -416,3 +416,6 @@ Documentação interativa completa em `http://localhost:8000/swagger`. Resumo:
 
 - [Diagrama Entidade-Relacionamento (DER)](CineCloud/documentos/DER.md) — schema do banco de escrita
   (SQL Server) e a estrutura dos documentos do lado de leitura (MongoDB).
+- [Barramento de eventos (RabbitMQ)](CineCloud/documentos/BarramentoDeEventos-RabbitMQ.md) —
+  passo a passo, com classes e filas reais, de como uma escrita na API vira um evento
+  publicado, consumido e sincronizado no MongoDB.
