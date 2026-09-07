@@ -4,6 +4,7 @@ using BuildingBlocks.Core.Mediator;
 using CineCloud.Application.Features.Directors.Commands.CreateDirector;
 using CineCloud.Application.Features.Directors.Commands.DeleteDirector;
 using CineCloud.Application.Features.Directors.Commands.UpdateDirector;
+using CineCloud.Queries.Application.Features.Directors.Queries.GetAllDirectors;
 using CineCloud.Queries.Application.Features.Directors.Queries.GetDirector;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,16 @@ public class DirectorsController : ApiController
         _publishEndpoint = publishEndpoint;
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(GetAllDirectorsResponse), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult> GetAllDirectors([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        var query = new GetAllDirectorsQuery(page, pageSize);
+
+        var response = (GetAllDirectorsResponse)await _mediator.SendQuery(query, HttpContext.RequestAborted);
+
+        return CustomResponse((int)HttpStatusCode.OK, true, response);
+    }
 
     [HttpGet("[action]/{fullName}", Name = "GetDirector")]
     [ProducesResponseType(typeof(BaseResponse), (int)HttpStatusCode.OK)]

@@ -6,4 +6,5 @@ public interface IQueryRepository<T> where T : class
     Task<bool> Update(T entity);
     Task<bool> Delete(string id);
     Task<T> Get(string id);
+    Task<(IReadOnlyCollection<T> Items, long TotalCount)> GetAll(int page, int pageSize);
 }

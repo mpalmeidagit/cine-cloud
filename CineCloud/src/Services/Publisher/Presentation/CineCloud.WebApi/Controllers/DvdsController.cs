@@ -5,6 +5,7 @@ using CineCloud.Application.Features.Dvds.Commands.DeleteDvd;
 using CineCloud.Application.Features.Dvds.Commands.RentDvd;
 using CineCloud.Application.Features.Dvds.Commands.ReturnDvd;
 using CineCloud.Application.Features.Dvds.Commands.UpdateDvd;
+using CineCloud.Queries.Application.Features.Dvds.Queries.GetAllDvds;
 using CineCloud.Queries.Application.Features.Dvds.Queries.GetDvd;
 using CineCloud.WebApi.Cache;
 using MassTransit;
@@ -20,13 +21,24 @@ public class DvdsController : ApiController
     private readonly ICacheRepository _cacheRepository;
 
     public DvdsController(
-        IMediatorHandler mediator, 
-        IPublishEndpoint publishEndPoint, 
+        IMediatorHandler mediator,
+        IPublishEndpoint publishEndPoint,
         ICacheRepository cacheRepository)
     {
         _mediator = mediator;
         _publishEndPoint = publishEndPoint;
         _cacheRepository = cacheRepository;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(GetAllDvdsResponse), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult> GetAllDvds([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        var query = new GetAllDvdsQuery(page, pageSize);
+
+        var response = (GetAllDvdsResponse)await _mediator.SendQuery(query, HttpContext.RequestAborted);
+
+        return CustomResponse((int)HttpStatusCode.OK, true, response);
     }
 
     [HttpGet("[action]/{title}", Name = "GetDvd")]

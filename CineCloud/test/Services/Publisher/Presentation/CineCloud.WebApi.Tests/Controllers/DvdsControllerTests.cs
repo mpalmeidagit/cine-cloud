@@ -5,6 +5,7 @@ using CineCloud.Application.Features.Dvds.Commands.DeleteDvd;
 using CineCloud.Application.Features.Dvds.Commands.RentDvd;
 using CineCloud.Application.Features.Dvds.Commands.ReturnDvd;
 using CineCloud.Application.Features.Dvds.Commands.UpdateDvd;
+using CineCloud.Queries.Application.Features.Dvds.Queries.GetAllDvds;
 using CineCloud.Queries.Application.Features.Dvds.Queries.GetDvd;
 using CineCloud.WebApi.Cache;
 using CineCloud.WebApi.Controllers;
@@ -30,6 +31,34 @@ public class DvdsControllerTests
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
         };
+    }
+
+    [Fact]
+    public async Task GetAllDvds_ShouldReturnOkWithResponse_UsingDefaultPaging()
+    {
+        var response = new GetAllDvdsResponse(
+            new[] { new GetDvdResponse("1", "Jaws", "Action", DateTime.Now, 5, "d1", DateTime.Now, DateTime.Now) },
+            1, 10, 1);
+        _mediatorMock.Setup(m => m.SendQuery(new GetAllDvdsQuery(1, 10), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        var result = await _controller.GetAllDvds();
+
+        var ok = result.Should().BeOfType<OkObjectResult>().Subject;
+        ok.Value.Should().BeOfType<BaseResponse>().Which.Data.Should().Be(response);
+    }
+
+    [Fact]
+    public async Task GetAllDvds_ShouldForwardPageAndPageSize_WhenProvided()
+    {
+        var response = new GetAllDvdsResponse(Array.Empty<GetDvdResponse>(), 2, 5, 0);
+        _mediatorMock.Setup(m => m.SendQuery(new GetAllDvdsQuery(2, 5), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        var result = await _controller.GetAllDvds(page: 2, pageSize: 5);
+
+        result.Should().BeOfType<OkObjectResult>();
+        _mediatorMock.Verify(m => m.SendQuery(new GetAllDvdsQuery(2, 5), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

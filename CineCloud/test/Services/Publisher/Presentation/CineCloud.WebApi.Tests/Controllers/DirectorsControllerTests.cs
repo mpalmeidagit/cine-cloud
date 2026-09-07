@@ -3,6 +3,7 @@ using BuildingBlocks.Core.Mediator;
 using CineCloud.Application.Features.Directors.Commands.CreateDirector;
 using CineCloud.Application.Features.Directors.Commands.DeleteDirector;
 using CineCloud.Application.Features.Directors.Commands.UpdateDirector;
+using CineCloud.Queries.Application.Features.Directors.Queries.GetAllDirectors;
 using CineCloud.Queries.Application.Features.Directors.Queries.GetDirector;
 using CineCloud.WebApi.Controllers;
 using FluentAssertions;
@@ -26,6 +27,33 @@ public class DirectorsControllerTests
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
         };
+    }
+
+    [Fact]
+    public async Task GetAllDirectors_ShouldReturnOkWithResponse_UsingDefaultPaging()
+    {
+        var response = new GetAllDirectorsResponse(
+            new[] { new GetDirectorResponse("1", "Steven Spielberg") }, 1, 10, 1);
+        _mediatorMock.Setup(m => m.SendQuery(new GetAllDirectorsQuery(1, 10), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        var result = await _controller.GetAllDirectors();
+
+        var ok = result.Should().BeOfType<OkObjectResult>().Subject;
+        ok.Value.Should().BeOfType<BaseResponse>().Which.Data.Should().Be(response);
+    }
+
+    [Fact]
+    public async Task GetAllDirectors_ShouldForwardPageAndPageSize_WhenProvided()
+    {
+        var response = new GetAllDirectorsResponse(Array.Empty<GetDirectorResponse>(), 2, 5, 0);
+        _mediatorMock.Setup(m => m.SendQuery(new GetAllDirectorsQuery(2, 5), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        var result = await _controller.GetAllDirectors(page: 2, pageSize: 5);
+
+        result.Should().BeOfType<OkObjectResult>();
+        _mediatorMock.Verify(m => m.SendQuery(new GetAllDirectorsQuery(2, 5), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

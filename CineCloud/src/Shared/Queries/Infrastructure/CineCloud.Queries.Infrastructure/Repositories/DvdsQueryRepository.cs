@@ -37,6 +37,21 @@ public class DvdsQueryRepository : IDvdsQueryRepository
         .Find(p => p.Title == title && p.Available)
         .FirstOrDefaultAsync();
 
+    public async Task<(IReadOnlyCollection<Dvd> Items, long TotalCount)> GetAll(int page, int pageSize)
+    {
+        var filter = Builders<Dvd>.Filter.Eq(d => d.Available, true);
+
+        var totalCount = await _context.Dvds.CountDocumentsAsync(filter);
+        var items = await _context.Dvds
+            .Find(filter)
+            .SortBy(d => d.Title)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
     public async Task<bool> Update(Dvd entity)
     {
         var result = await _context.Dvds.ReplaceOneAsync(d => d.Id == entity.Id, entity);  
