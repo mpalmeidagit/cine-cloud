@@ -28,7 +28,7 @@ public class Director : Entity
     public void UpdateName(string name)
     {
         if (!ValidateName(name))
-            throw new DomainException($"Invalid name for director");
+            throw new DomainException("Nome inválido para o diretor");
 
         Name = name;
         UpdatedAt = DateTime.Now;
@@ -37,7 +37,7 @@ public class Director : Entity
     public void UpdateSurname(string surname)
     {
         if (!ValidateName(surname))
-            throw new DomainException($"Invalid surname for director");
+            throw new DomainException("Sobrenome inválido para o diretor");
 
         Surname = surname;
         UpdatedAt = DateTime.Now;

@@ -21,7 +21,7 @@ public class DirectorTests
     {
         var act = () => new Director("st", "Spielberg");
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid name for director");
+        act.Should().Throw<DomainException>().WithMessage("Nome inválido para o diretor");
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class DirectorTests
     {
         var act = () => new Director("Steven", "sp");
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid surname for director");
+        act.Should().Throw<DomainException>().WithMessage("Sobrenome inválido para o diretor");
     }
 
     [Fact]

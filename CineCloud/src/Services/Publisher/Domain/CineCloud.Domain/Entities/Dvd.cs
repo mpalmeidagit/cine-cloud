@@ -34,7 +34,7 @@ public class Dvd : Entity
     public void RentCopy()
     {
         if (Copies == 0 || !Available)
-            throw new DomainException($"DVD {Title} is not available to rent");
+            throw new DomainException($"O DVD {Title} não está disponível para aluguel");
 
         var copies = Copies - 1;
         UpdateCopies(copies);
@@ -43,7 +43,7 @@ public class Dvd : Entity
     public void ReturnCopy()
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
         var copies = Copies + 1;
         UpdateCopies(copies);
     }
@@ -51,10 +51,10 @@ public class Dvd : Entity
     public void UpdateTitle(string title)
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
 
         if (string.IsNullOrWhiteSpace(title) || title.Length < MIN_TITLE_LENGTH || title.Length > MAX_TITLE_LENGTH)
-            throw new DomainException($"Invalid name {title} to a DVD");
+            throw new DomainException($"Título {title} inválido para um DVD");
 
         Title = title;
         UpdatedAt = DateTime.Now;
@@ -63,7 +63,7 @@ public class Dvd : Entity
     public void UpdateGenre(int genre)
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
 
         Genre = genre switch
         {
@@ -86,7 +86,7 @@ public class Dvd : Entity
             16 => EGenre.Historic,
             17 => EGenre.War,
             18 => EGenre.Family,
-            _ => throw new DomainException("Invalid genre option!")
+            _ => throw new DomainException("Opção de gênero inválida!")
         };
 
         UpdatedAt = DateTime.Now;
@@ -95,11 +95,11 @@ public class Dvd : Entity
     public void UpdatePublishedDate(DateTime date)
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
         var todayDate = DateTime.Now;
 
         if (todayDate < date)
-            throw new DomainException("Invalid published date");
+            throw new DomainException("Data de publicação inválida");
 
         Published = date;
         UpdatedAt = todayDate;
@@ -108,10 +108,10 @@ public class Dvd : Entity
     public void UpdateDirector(Guid directorId)
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
 
         if (directorId == Guid.Empty)
-            throw new DomainException("Invalid director's Id");
+            throw new DomainException("Id do diretor inválido");
 
         DirectorId = directorId;
         UpdatedAt = DateTime.Now;
@@ -120,10 +120,10 @@ public class Dvd : Entity
     public void UpdateCopies(int copies)
     {
         if (!Available)
-            throw new DomainException($"DVD {Title} is not available");
+            throw new DomainException($"O DVD {Title} não está disponível");
 
         if (copies < 0)
-            throw new DomainException("Number of copies must be greater than zero.");
+            throw new DomainException("O número de cópias não pode ser negativo.");
 
         Copies = copies;
         UpdatedAt = DateTime.Now;
@@ -132,7 +132,7 @@ public class Dvd : Entity
     public void DeleteDvd()
     {
         if (!Available)
-            throw new DomainException("DVD is already deleted.");
+            throw new DomainException("O DVD já foi excluído.");
         Available = false;
         Copies = 0;
         DeletedAt = DateTime.Now;

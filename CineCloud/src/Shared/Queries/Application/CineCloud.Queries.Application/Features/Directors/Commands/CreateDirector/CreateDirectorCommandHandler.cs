@@ -7,22 +7,14 @@ namespace CineCloud.Queries.Application.Features.Directors.Commands.CreateDirect
 public class CreateDirectorCommandHandler : IRequestHandler<CreateDirectorCommand, bool>
 {
     private readonly IDirectorsQueryRepository _repository;
-    private readonly CreateDirectorCommandValidator _validator;
 
-    public CreateDirectorCommandHandler(
-        IDirectorsQueryRepository repository,
-        CreateDirectorCommandValidator validator)
+    public CreateDirectorCommandHandler(IDirectorsQueryRepository repository)
     {
         _repository = repository;
-        _validator = validator;
     }
 
     public async Task<bool> Handle(CreateDirectorCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-            return false;
-
         var director = await _repository.Get(request.Id);
         if (director is not null)
             return false;

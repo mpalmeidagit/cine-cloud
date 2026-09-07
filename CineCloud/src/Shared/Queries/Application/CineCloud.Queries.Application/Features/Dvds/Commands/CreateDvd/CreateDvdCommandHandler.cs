@@ -8,20 +8,14 @@ namespace CineCloud.Queries.Application.Features.Dvds.Commands.CreateDvd;
 public class CreateDvdCommandHandler : IRequestHandler<CreateDvdCommand, bool>
 {
     private readonly IDvdsQueryRepository _repository;
-    private readonly CreateDvdCommandValidator _validator;
 
-    public CreateDvdCommandHandler(IDvdsQueryRepository repository, CreateDvdCommandValidator validator)
+    public CreateDvdCommandHandler(IDvdsQueryRepository repository)
     {
         _repository = repository;
-        _validator = validator;
     }
 
     public async Task<bool> Handle(CreateDvdCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-            return false;
-
         var dvd = await _repository.Get(request.Id);
         if (dvd is not null)
             return false;

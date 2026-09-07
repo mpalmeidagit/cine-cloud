@@ -6,22 +6,14 @@ namespace CineCloud.Application.Features.Directors.Commands.UpdateDirector;
 public class UpdateDirectorCommandHandler : IRequestHandler<UpdateDirectorCommand, UpdateDirectorResponse>
 {
     private readonly IDirectorsWriteRepository _repository;
-    private readonly UpdateDirectorCommandValidator _validator;
 
-    public UpdateDirectorCommandHandler(
-        IDirectorsWriteRepository repository, 
-        UpdateDirectorCommandValidator validator)
+    public UpdateDirectorCommandHandler(IDirectorsWriteRepository repository)
     {
         _repository = repository;
-        _validator = validator;
     }
 
     public async Task<UpdateDirectorResponse> Handle(UpdateDirectorCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-            return default;
-
         var director = await _repository.Get(request.Id);
         if (director is null)
             return default;

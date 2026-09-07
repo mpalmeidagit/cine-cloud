@@ -16,17 +16,17 @@ public class ApiController : ControllerBase
             (404, false) => NotFound(new BaseResponse {
                 StatusCode = status,
                 Success = success,
-                Message = "No elements found." }),
+                Message = "Nenhum elemento encontrado." }),
 
             (400, false) => BadRequest(new BaseResponse {
                 StatusCode = status,
                 Success = success,
-                Message = "Errors during the transaction." }),
+                Message = "Ocorreram erros durante a transação." }),
 
             (201, true) => Ok(new BaseResponse {
                 StatusCode = status,
                 Success = success,
-                Message = "Created", Data = data }),
+                Message = "Criado com sucesso", Data = data }),
 
             (200, true) => Ok(new BaseResponse {
                 StatusCode = status,

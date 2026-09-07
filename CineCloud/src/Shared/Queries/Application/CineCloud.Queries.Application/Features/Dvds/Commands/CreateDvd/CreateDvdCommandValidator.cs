@@ -13,7 +13,7 @@ public class CreateDvdCommandValidator : AbstractValidator<CreateDvdCommand>
             .NotEmpty().WithMessage(ValidationMessages.EMPTY_STRING_ERROR_MESSAGE);
         RuleFor(d => d.Published)
             .NotEmpty().WithMessage(ValidationMessages.ERROR_MESSAGE)
-            .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
+            .Must(value => value.ToUniversalTime() < DateTime.UtcNow).WithMessage(ValidationMessages.ERROR_MESSAGE);
         RuleFor(d => d.Genre)
             .NotEmpty().WithMessage(ValidationMessages.EMPTY_STRING_ERROR_MESSAGE);
         RuleFor(d => d.Available)
@@ -21,9 +21,9 @@ public class CreateDvdCommandValidator : AbstractValidator<CreateDvdCommand>
         RuleFor(d => d.Copies)
             .GreaterThan(-1).WithMessage(ValidationMessages.ERROR_MESSAGE);
         RuleFor(d => d.CreatedAt)
-            .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
+            .Must(value => value.ToUniversalTime() < DateTime.UtcNow).WithMessage(ValidationMessages.ERROR_MESSAGE);
         RuleFor(d => d.UpdatedAt)
-            .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
+            .Must(value => value.ToUniversalTime() < DateTime.UtcNow).WithMessage(ValidationMessages.ERROR_MESSAGE);
         RuleFor(d => d.DirectorId)
             .NotEmpty().WithMessage(ValidationMessages.EMPTY_STRING_ERROR_MESSAGE);
     }

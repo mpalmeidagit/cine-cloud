@@ -5,6 +5,7 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -49,13 +50,36 @@ public class GlobalExceptionHandlerTests
     }
 
     [Fact]
-    public async Task TryHandleAsync_ShouldReturn500_ForFluentValidationException()
+    public async Task TryHandleAsync_ShouldReturn400_ForFluentValidationException()
     {
         var failures = new List<ValidationFailure> { new("Name", "Name is required") };
         var (statusCode, body) = await InvokeAsync(new ValidationException(failures));
 
+        statusCode.Should().Be(400);
+        body.Should().Contain("Name: Name is required");
+    }
+
+    [Fact]
+    public async Task TryHandleAsync_ShouldJoinAllFailures_ForFluentValidationExceptionWithMultipleErrors()
+    {
+        var failures = new List<ValidationFailure>
+        {
+            new("Name", "Name is required"),
+            new("Surname", "Surname is required")
+        };
+        var (statusCode, body) = await InvokeAsync(new ValidationException(failures));
+
+        statusCode.Should().Be(400);
+        body.Should().Contain("Name: Name is required").And.Contain("Surname: Surname is required");
+    }
+
+    [Fact]
+    public async Task TryHandleAsync_ShouldReturnGenericMessage_ForDbUpdateExceptionWithoutSqlInnerException()
+    {
+        var (statusCode, body) = await InvokeAsync(new DbUpdateException("save failed", new InvalidOperationException("boom")));
+
         statusCode.Should().Be(500);
-        body.Should().Contain("Name is required");
+        body.Should().Contain("Algo deu errado");
     }
 
     [Fact]
