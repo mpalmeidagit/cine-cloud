@@ -14,22 +14,11 @@ public class UpdateDirectorCommandHandlerTests
 
     public UpdateDirectorCommandHandlerTests()
     {
-        _handler = new UpdateDirectorCommandHandler(_repositoryMock.Object, new UpdateDirectorCommandValidator());
+        _handler = new UpdateDirectorCommandHandler(_repositoryMock.Object);
     }
 
     private static UpdateDirectorCommand ValidCommand(string? id = null) =>
         new(id ?? Guid.NewGuid().ToString(), "George Lucas", DateTime.Now.AddMinutes(-1));
-
-    [Fact]
-    public async Task Handle_ShouldReturnFalse_WhenCommandIsInvalid()
-    {
-        var command = ValidCommand() with { FullName = "" };
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeFalse();
-        _repositoryMock.Verify(r => r.Get(It.IsAny<string>()), Times.Never);
-    }
 
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenDirectorDoesNotExist()

@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace CineCloud.WebApi.Setup;
 
@@ -21,7 +22,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             ArgumentNullException argumentException => (500, argumentException.Message),
             DomainException domainException => (500, domainException.Message),
             SqlException sqlException => (500, sqlException.Message),
-            ValidationException validationException => (500, validationException.Message),
+            ValidationException validationException => (400, FormatValidationErrors(validationException)),
+            DbUpdateException dbUpdateException => MapDbUpdateException(dbUpdateException),
             _ => (500, "Algo deu errado")
         };
 
@@ -30,4 +32,14 @@ public class GlobalExceptionHandler : IExceptionHandler
         await httpContext.Response.WriteAsJsonAsync(errorMessage, cancellationToken);
         return true;
     }
+
+    private static string FormatValidationErrors(ValidationException exception) =>
+        string.Join(" | ", exception.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+
+    private const int FOREIGN_KEY_VIOLATION_ERROR_NUMBER = 547;
+
+    private static (int StatusCode, string ErrorMessage) MapDbUpdateException(DbUpdateException exception) =>
+        exception.InnerException is SqlException { Number: FOREIGN_KEY_VIOLATION_ERROR_NUMBER }
+            ? (400, "Referência inválida: verifique se os identificadores informados existem.")
+            : (500, "Algo deu errado");
 }

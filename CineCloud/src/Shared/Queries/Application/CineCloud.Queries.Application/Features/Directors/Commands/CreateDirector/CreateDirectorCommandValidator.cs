@@ -16,8 +16,8 @@ public class CreateDirectorCommandValidator : AbstractValidator<CreateDirectorCo
             .MinimumLength(MIN_LENGTH).WithMessage(ValidationMessages.MIN_LENGTH_ERROR_MESSAGE)
             .MaximumLength(MAX_LENGTH).WithMessage(ValidationMessages.MAX_LENGTH_ERROR_MESSAGE);
         RuleFor(x => x.CreatedAt)
-            .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
+            .Must(value => value.ToUniversalTime() < DateTime.UtcNow).WithMessage(ValidationMessages.ERROR_MESSAGE);
         RuleFor(x => x.UpdatedAt)
-            .LessThan(DateTime.Now).WithMessage(ValidationMessages.ERROR_MESSAGE);
+            .Must(value => value.ToUniversalTime() < DateTime.UtcNow).WithMessage(ValidationMessages.ERROR_MESSAGE);
     }
 }

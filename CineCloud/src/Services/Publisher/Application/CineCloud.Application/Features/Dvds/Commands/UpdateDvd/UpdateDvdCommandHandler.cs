@@ -6,23 +6,14 @@ namespace CineCloud.Application.Features.Dvds.Commands.UpdateDvd;
 public class UpdateDvdCommandHandler : IRequestHandler<UpdateDvdCommand, UpdateDvdResponse>
 {
     private readonly IDvdsWriteRepository _repository;
-    private readonly UpdateDvdCommandValidator _validator;
 
-    public UpdateDvdCommandHandler(
-        IDvdsWriteRepository repository,
-        UpdateDvdCommandValidator validator)
+    public UpdateDvdCommandHandler(IDvdsWriteRepository repository)
     {
         _repository = repository;
-        _validator = validator;
     }
 
     public async Task<UpdateDvdResponse> Handle(UpdateDvdCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = _validator.Validate(request);
-
-        if (!validationResult.IsValid)
-            return default;
-
         var dvd = await _repository.Get(request.Id);
         if (dvd is null)
             return default;

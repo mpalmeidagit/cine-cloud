@@ -30,7 +30,7 @@ public class DvdTests
     {
         var act = () => new Dvd("Jaws", 99, DateTime.Now.AddYears(-40), 5, Guid.NewGuid());
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid genre option!");
+        act.Should().Throw<DomainException>().WithMessage("Opção de gênero inválida!");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class DvdTests
     {
         var act = () => new Dvd("Jaws", 0, DateTime.Now.AddDays(1), 5, Guid.NewGuid());
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid published date");
+        act.Should().Throw<DomainException>().WithMessage("Data de publicação inválida");
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class DvdTests
     {
         var act = () => new Dvd("Jaws", 0, DateTime.Now.AddYears(-40), 5, Guid.Empty);
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid director's Id");
+        act.Should().Throw<DomainException>().WithMessage("Id do diretor inválido");
     }
 
     [Theory]
@@ -72,7 +72,7 @@ public class DvdTests
     {
         var act = () => new Dvd("Jaws", 0, DateTime.Now.AddYears(-40), -1, Guid.NewGuid());
 
-        act.Should().Throw<DomainException>().WithMessage("Number of copies must be greater than zero.");
+        act.Should().Throw<DomainException>().WithMessage("O número de cópias não pode ser negativo.");
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class DvdTests
 
         var act = () => dvd.RentCopy();
 
-        act.Should().Throw<DomainException>().WithMessage($"DVD {dvd.Title} is not available to rent");
+        act.Should().Throw<DomainException>().WithMessage($"O DVD {dvd.Title} não está disponível para aluguel");
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class DvdTests
 
         var act = () => dvd.ReturnCopy();
 
-        act.Should().Throw<DomainException>().WithMessage($"DVD {dvd.Title} is not available");
+        act.Should().Throw<DomainException>().WithMessage($"O DVD {dvd.Title} não está disponível");
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class DvdTests
 
         var act = () => dvd.UpdateTitle("Jaws 2");
 
-        act.Should().Throw<DomainException>().WithMessage($"DVD {dvd.Title} is not available");
+        act.Should().Throw<DomainException>().WithMessage($"O DVD {dvd.Title} não está disponível");
     }
 
     [Theory]
@@ -169,7 +169,7 @@ public class DvdTests
 
         var act = () => dvd.UpdateGenre(19);
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid genre option!");
+        act.Should().Throw<DomainException>().WithMessage("Opção de gênero inválida!");
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class DvdTests
 
         var act = () => dvd.UpdatePublishedDate(DateTime.Now.AddDays(1));
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid published date");
+        act.Should().Throw<DomainException>().WithMessage("Data de publicação inválida");
     }
 
     [Fact]
@@ -211,7 +211,7 @@ public class DvdTests
 
         var act = () => dvd.UpdateDirector(Guid.Empty);
 
-        act.Should().Throw<DomainException>().WithMessage("Invalid director's Id");
+        act.Should().Throw<DomainException>().WithMessage("Id do diretor inválido");
     }
 
     [Fact]
@@ -231,7 +231,7 @@ public class DvdTests
 
         var act = () => dvd.UpdateCopies(-1);
 
-        act.Should().Throw<DomainException>().WithMessage("Number of copies must be greater than zero.");
+        act.Should().Throw<DomainException>().WithMessage("O número de cópias não pode ser negativo.");
     }
 
     [Fact]
@@ -254,6 +254,6 @@ public class DvdTests
 
         var act = () => dvd.DeleteDvd();
 
-        act.Should().Throw<DomainException>().WithMessage("DVD is already deleted.");
+        act.Should().Throw<DomainException>().WithMessage("O DVD já foi excluído.");
     }
 }

@@ -14,18 +14,7 @@ public class CreateDirectorCommandHandlerTests
 
     public CreateDirectorCommandHandlerTests()
     {
-        _handler = new CreateDirectorCommandHandler(_repositoryMock.Object, new CreateDirectorCommandValidator());
-    }
-
-    [Fact]
-    public async Task Handle_ShouldReturnNullAndNotCreate_WhenCommandIsInvalid()
-    {
-        var command = new CreateDirectorCommand("", "Spielberg");
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeNull();
-        _repositoryMock.Verify(r => r.Create(It.IsAny<Director>()), Times.Never);
+        _handler = new CreateDirectorCommandHandler(_repositoryMock.Object);
     }
 
     [Fact]

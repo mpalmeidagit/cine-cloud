@@ -14,23 +14,12 @@ public class CreateDvdCommandHandlerTests
 
     public CreateDvdCommandHandlerTests()
     {
-        _handler = new CreateDvdCommandHandler(_repositoryMock.Object, new CreateDvdCommandValidator());
+        _handler = new CreateDvdCommandHandler(_repositoryMock.Object);
     }
 
     private static CreateDvdCommand ValidCommand(string? id = null) =>
         new(id ?? Guid.NewGuid().ToString(), "Jaws", "Action", DateTime.Now.AddYears(-40), true, 5,
             Guid.NewGuid().ToString(), DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(-1));
-
-    [Fact]
-    public async Task Handle_ShouldReturnFalse_WhenCommandIsInvalid()
-    {
-        var command = ValidCommand() with { Title = "" };
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeFalse();
-        _repositoryMock.Verify(r => r.Get(It.IsAny<string>()), Times.Never);
-    }
 
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenDvdAlreadyExists()

@@ -23,7 +23,7 @@ public class ApiControllerTests
 
         var notFound = result.Should().BeOfType<NotFoundObjectResult>().Subject;
         notFound.Value.Should().BeOfType<BaseResponse>()
-            .Which.Message.Should().Be("No elements found.");
+            .Which.Message.Should().Be("Nenhum elemento encontrado.");
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ApiControllerTests
 
         var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
         badRequest.Value.Should().BeOfType<BaseResponse>()
-            .Which.Message.Should().Be("Errors during the transaction.");
+            .Which.Message.Should().Be("Ocorreram erros durante a transação.");
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class ApiControllerTests
 
         var ok = result.Should().BeOfType<OkObjectResult>().Subject;
         var body = ok.Value.Should().BeOfType<BaseResponse>().Subject;
-        body.Message.Should().Be("Created");
+        body.Message.Should().Be("Criado com sucesso");
         body.Data.Should().Be(data);
     }
 

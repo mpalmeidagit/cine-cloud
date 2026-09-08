@@ -14,22 +14,11 @@ public class CreateDirectorCommandHandlerTests
 
     public CreateDirectorCommandHandlerTests()
     {
-        _handler = new CreateDirectorCommandHandler(_repositoryMock.Object, new CreateDirectorCommandValidator());
+        _handler = new CreateDirectorCommandHandler(_repositoryMock.Object);
     }
 
     private static CreateDirectorCommand ValidCommand(string? id = null) =>
         new(id ?? Guid.NewGuid().ToString(), "Steven Spielberg", DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(-1));
-
-    [Fact]
-    public async Task Handle_ShouldReturnFalse_WhenCommandIsInvalid()
-    {
-        var command = ValidCommand() with { FullName = "" };
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeFalse();
-        _repositoryMock.Verify(r => r.Get(It.IsAny<string>()), Times.Never);
-    }
 
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenDirectorAlreadyExists()

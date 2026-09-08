@@ -14,22 +14,11 @@ public class UpdateDvdCommandHandlerTests
 
     public UpdateDvdCommandHandlerTests()
     {
-        _handler = new UpdateDvdCommandHandler(_repositoryMock.Object, new UpdateDvdCommandValidator());
+        _handler = new UpdateDvdCommandHandler(_repositoryMock.Object);
     }
 
     private static Dvd ExistingDvd() =>
         new("Jaws", 0, DateTime.Now.AddYears(-40), 5, Guid.NewGuid());
-
-    [Fact]
-    public async Task Handle_ShouldReturnNull_WhenCommandIsInvalid()
-    {
-        var command = new UpdateDvdCommand(Guid.Empty, "Jaws", 0, DateTime.Now.AddYears(-40), Guid.NewGuid(), 5);
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeNull();
-        _repositoryMock.Verify(r => r.Get(It.IsAny<Guid>()), Times.Never);
-    }
 
     [Fact]
     public async Task Handle_ShouldReturnNull_WhenDvdDoesNotExist()

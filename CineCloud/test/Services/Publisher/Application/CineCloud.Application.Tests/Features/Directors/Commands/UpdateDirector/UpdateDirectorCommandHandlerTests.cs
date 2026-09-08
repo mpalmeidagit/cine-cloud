@@ -14,18 +14,7 @@ public class UpdateDirectorCommandHandlerTests
 
     public UpdateDirectorCommandHandlerTests()
     {
-        _handler = new UpdateDirectorCommandHandler(_repositoryMock.Object, new UpdateDirectorCommandValidator());
-    }
-
-    [Fact]
-    public async Task Handle_ShouldReturnNull_WhenCommandIsInvalid()
-    {
-        var command = new UpdateDirectorCommand(Guid.Empty, "Steven", "Spielberg");
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.Should().BeNull();
-        _repositoryMock.Verify(r => r.Get(It.IsAny<Guid>()), Times.Never);
+        _handler = new UpdateDirectorCommandHandler(_repositoryMock.Object);
     }
 
     [Fact]
